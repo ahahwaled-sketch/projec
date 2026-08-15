@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مدرسة الأميرية الثانوية بنين | المنظومة الإلكترونية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{
+  --navy-deep:#0E2434;
+  --navy-panel:#153347;
+  --navy-panel-2:#1C4059;
+  --gold:#C9A24B;
+  --gold-soft:#e3c576;
+  --emerald:#2E7D5B;
+  --emerald-soft:#3f9c74;
+  --text-main:#EDEFEE;
+  --text-muted:#96AEBA;
+  --danger:#C1524A;
+  --border-line:#28495f;
+  --radius:10px;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--navy-deep);
+  color:var(--text-main);
+  font-family:'Tajawal',sans-serif;
+  min-height:100vh;
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(201,162,75,.06), transparent 40%),
+    radial-gradient(circle at 85% 90%, rgba(46,125,91,.08), transparent 45%);
+}
+h1,h2,h3,.font-display{font-family:'Amiri',serif;}
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-thumb{background:var(--navy-panel-2);border-radius:8px;}
+::-webkit-scrollbar-track{background:transparent;}
+
+/* ---------- Guilloche seal pattern (signature element) ---------- */
+.seal-wrap{
+  position:relative;width:150px;height:150px;margin:0 auto 18px;
+  display:flex;align-items:center;justify-content:center;
+}
+.seal-wrap svg{width:100%;height:100%;}
+.seal-ring{fill:none;stroke:var(--gold);stroke-width:1;opacity:.55;}
+.seal-ring2{fill:none;stroke:var(--gold);stroke-width:.6;opacity:.35;}
+
+/* ---------- LOGIN SCREEN ---------- */
+#loginScreen{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;
+  padding:24px;
+}
+#siteLock{
+  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(5,15,22,.92);z-index:200;padding:20px;
+}
+.lock-box{
+  width:100%;max-width:420px;background:linear-gradient(180deg,var(--navy-panel),var(--navy-deep));
+  border:1px solid var(--border-line);border-radius:16px;padding:28px;box-shadow:var(--shadow);
+}
+.lock-box h2{margin:0 0 8px;color:var(--gold-soft);text-align:center;}
+.lock-box p{margin:0 0 18px;text-align:center;color:var(--text-muted);font-size:13px;}
+.lock-input{margin-top:8px;}
+.lock-error{display:none;color:var(--danger);font-size:12px;margin-top:10px;text-align:center;}
+.login-card{
+  width:100%;max-width:940px;
+  background:linear-gradient(180deg,var(--navy-panel),var(--navy-deep));
+  border:1px solid var(--border-line);
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  display:grid;grid-template-columns:1fr 1fr;overflow:hidden;
+}
+@media (max-width:820px){.login-card{grid-template-columns:1fr;}}
+.login-emblem{
+  position:relative;
+  padding:40px 30px;
+  background:
+    repeating-linear-gradient(45deg, rgba(201,162,75,.05) 0 2px, transparent 2px 14px),
+    linear-gradient(160deg,#0c1f2c,#153347 70%);
+  border-left:1px solid var(--border-line);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+}
+@media (max-width:820px){.login-emblem{border-left:none;border-bottom:1px solid var(--border-line);}}
+.login-emblem h1{color:var(--gold-soft);font-size:26px;margin:6px 0 2px;line-height:1.5;}
+.login-emblem .subtitle{color:var(--text-muted);font-size:13px;letter-spacing:.5px;margin-bottom:14px;}
+.login-emblem .tagline{
+  font-size:12px;color:var(--text-muted);border-top:1px solid var(--border-line);
+  padding-top:14px;margin-top:14px;max-width:260px;
+}
+.login-form{padding:40px 34px;display:flex;flex-direction:column;justify-content:center;}
+.role-tabs{display:flex;gap:8px;margin-bottom:22px;background:var(--navy-deep);padding:5px;border-radius:10px;}
+.role-tab{
+  flex:1;text-align:center;padding:9px 6px;border-radius:8px;cursor:pointer;
+  font-size:13px;color:var(--text-muted);transition:.2s;user-select:none;
+}
+.role-tab.active{background:var(--navy-panel-2);color:var(--gold-soft);font-weight:700;}
+label{font-size:12.5px;color:var(--text-muted);display:block;margin:14px 0 6px;}
+input[type=text],input[type=password],input[type=date],input[type=number],select,textarea{
+  width:100%;background:var(--navy-deep);border:1px solid var(--border-line);
+  color:var(--text-main);padding:11px 12px;border-radius:8px;font-family:'Tajawal';font-size:14px;
+}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
+.btn{
+  border:none;border-radius:8px;padding:12px 18px;font-family:'Tajawal';font-weight:700;
+  cursor:pointer;font-size:14px;transition:.15s;
+}
+.btn-gold{background:var(--gold);color:#1a1204;}
+.btn-gold:hover{background:var(--gold-soft);}
+.btn-outline{background:transparent;border:1px solid var(--border-line);color:var(--text-main);}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold-soft);}
+.btn-danger{background:var(--danger);color:#fff;}
+.btn-danger:hover{background:#d76860;}
+.btn-emerald{background:var(--emerald);color:#fff;}
+.btn-emerald:hover{background:var(--emerald-soft);}
+.btn-sm{padding:6px 10px;font-size:12px;border-radius:6px;}
+.btn-block{width:100%;margin-top:18px;}
+.hint-box{
+  margin-top:16px;font-size:11.5px;color:var(--text-muted);background:var(--navy-deep);
+  border:1px dashed var(--border-line);border-radius:8px;padding:10px 12px;line-height:1.7;
+}
+.error-msg{color:var(--danger);font-size:12.5px;margin-top:10px;display:none;}
+
+/* ---------- APP SHELL ---------- */
+#app{display:none;min-height:100vh;}
+.shell{display:flex;min-height:100vh;}
+.sidebar{
+  width:230px;background:var(--navy-panel);border-left:1px solid var(--border-line);
+  display:flex;flex-direction:column;padding:20px 14px;flex-shrink:0;
+}
+.sidebar .brand{display:flex;flex-direction:column;align-items:center;text-align:center;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border-line);}
+.sidebar .brand .mini-seal{width:56px;height:56px;margin-bottom:8px;}
+.sidebar .brand strong{font-family:'Amiri';color:var(--gold-soft);font-size:15px;line-height:1.5;}
+.sidebar .brand span{font-size:11px;color:var(--text-muted);margin-top:3px;}
+.nav-item{
+  display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:8px;
+  color:var(--text-muted);cursor:pointer;font-size:13.5px;margin-bottom:4px;transition:.15s;
+}
+.nav-item:hover{background:var(--navy-panel-2);color:var(--text-main);}
+.nav-item.active{background:var(--navy-panel-2);color:var(--gold-soft);font-weight:700;border-right:3px solid var(--gold);}
+.nav-icon{font-size:16px;width:20px;text-align:center;}
+.sidebar-footer{margin-top:auto;padding-top:14px;border-top:1px solid var(--border-line);}
+.user-chip{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--text-muted);margin-bottom:10px;}
+.avatar-badge{
+  width:30px;height:30px;border-radius:50%;background:var(--navy-panel-2);
+  display:flex;align-items:center;justify-content:center;color:var(--gold-soft);font-weight:700;font-size:13px;
+  border:1px solid var(--border-line);
+}
+.main{flex:1;padding:26px 30px;overflow-y:auto;}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;flex-wrap:wrap;gap:10px;}
+.topbar h2{margin:0;font-size:22px;color:var(--gold-soft);}
+.topbar .path{font-size:12px;color:var(--text-muted);margin-top:2px;}
+.pill{background:var(--navy-panel-2);border:1px solid var(--border-line);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--text-muted);}
+
+.grid-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
+@media (max-width:1000px){.grid-cards{grid-template-columns:repeat(2,1fr);}}
+.stat-card{
+  background:var(--navy-panel);border:1px solid var(--border-line);border-radius:12px;padding:18px;
+  position:relative;overflow:hidden;
+}
+.stat-card::before{content:"";position:absolute;inset-inline-start:0;top:0;bottom:0;width:3px;background:var(--gold);}
+.stat-card .num{font-size:26px;font-weight:900;color:var(--text-main);}
+.stat-card .lbl{font-size:12px;color:var(--text-muted);margin-top:4px;}
+
+.panel{
+  background:var(--navy-panel);border:1px solid var(--border-line);border-radius:12px;
+  padding:20px;margin-bottom:20px;
+}
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.panel-head h3{margin:0;font-size:16px;color:var(--text-main);}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th,td{padding:10px 12px;text-align:right;border-bottom:1px solid var(--border-line);}
+th{color:var(--gold-soft);font-weight:700;background:var(--navy-deep);font-size:12.5px;}
+tr:hover td{background:rgba(255,255,255,.02);}
+.badge{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;}
+.badge-green{background:rgba(46,125,91,.2);color:#5fd39c;}
+.badge-red{background:rgba(193,82,74,.2);color:#f28f88;}
+.badge-gold{background:rgba(201,162,75,.18);color:var(--gold-soft);}
+.badge-muted{background:rgba(150,174,186,.15);color:var(--text-muted);}
+.empty-state{text-align:center;padding:40px 10px;color:var(--text-muted);font-size:13px;}
+.empty-state .big{font-size:34px;margin-bottom:8px;}
+
+.form-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+@media (max-width:900px){.form-row{grid-template-columns:1fr 1fr;}}
+@media (max-width:600px){.form-row{grid-template-columns:1fr;}}
+
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(5,15,22,.65);display:none;
+  align-items:center;justify-content:center;z-index:50;padding:20px;
+}
+.modal-box{
+  background:var(--navy-panel);border:1px solid var(--border-line);border-radius:14px;
+  max-width:520px;width:100%;padding:24px;box-shadow:var(--shadow);max-height:85vh;overflow-y:auto;
+}
+.modal-box h3{margin-top:0;color:var(--gold-soft);}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;}
+.close-x{cursor:pointer;color:var(--text-muted);font-size:20px;float:left;}
+.tabs-row{display:flex;gap:6px;margin-bottom:16px;border-bottom:1px solid var(--border-line);}
+.tab-btn{padding:9px 16px;font-size:13px;color:var(--text-muted);cursor:pointer;border-bottom:2px solid transparent;}
+.tab-btn.active{color:var(--gold-soft);border-color:var(--gold);font-weight:700;}
+.select-inline{display:inline-block;min-width:160px;}
+.flex-between{display:flex;justify-content:space-between;align-items:center;}
+.small-muted{font-size:12px;color:var(--text-muted);}
+.progress-track{height:8px;border-radius:6px;background:var(--navy-deep);overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--emerald),var(--gold));}
+.toast{
+  position:fixed;bottom:24px;left:24px;background:var(--navy-panel-2);border:1px solid var(--gold);
+  color:var(--text-main);padding:12px 18px;border-radius:10px;font-size:13px;box-shadow:var(--shadow);
+  z-index:100;display:none;
+}
+</style>
+</head>
+<body>
+
+<div id="siteLock">
+  <div class="lock-box">
+    <h2>قفل الموقع</h2>
+    <p>أدخل كلمة المرور للدخول إلى النظام</p>
+    <input type="password" id="sitePasswordInput" class="lock-input" placeholder="كلمة المرور" />
+    <button class="btn btn-gold btn-block" onclick="unlockSite()">دخول</button>
+    <div class="lock-error" id="siteLockError">كلمة المرور غير صحيحة</div>
+  </div>
+</div>
+
+<!-- ============= LOGIN SCREEN ============= -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-emblem">
+      <div class="seal-wrap">
+        <svg viewBox="0 0 150 150">
+          <circle class="seal-ring" cx="75" cy="75" r="68"/>
+          <circle class="seal-ring2" cx="75" cy="75" r="60"/>
+          <circle class="seal-ring2" cx="75" cy="75" r="52"/>
+          <g fill="none" stroke="#C9A24B" stroke-width="1" opacity=".8">
+            <path d="M75 20 L75 130 M20 75 L130 75" stroke-opacity=".15"/>
+          </g>
+          <text x="75" y="68" text-anchor="middle" font-family="Amiri, serif" font-size="30" fill="#e3c576">ث</text>
+          <text x="75" y="98" text-anchor="middle" font-family="Tajawal, sans-serif" font-size="9" letter-spacing="2" fill="#96AEBA">AMIRIYA · 1927</text>
+        </svg>
+      </div>
+      <h1>مدرسة الأميرية الثانوية بنين</h1>
+      <div class="subtitle">المنظومة الإلكترونية لشؤون الطلاب</div>
+      <div class="tagline">سجل الحضور والدرجات والتقييمات الدورية بإشراف الإدارة، على غرار أنظمة وزارة التربية والتعليم.</div>
+    </div>
+    <div class="login-form">
+      <div class="role-tabs" id="roleTabs">
+        <div class="role-tab active" data-role="admin">الإدارة</div>
+        <div class="role-tab" data-role="teacher">المعلم</div>
+        <div class="role-tab" data-role="student">الطالب</div>
+      </div>
+      <label>اسم المستخدم</label>
+      <input type="text" id="loginUser" placeholder>
+      <label>كلمة المرور</label>
+      <input type="password" id="loginPass" placeholder>
+      <button class="btn btn-gold btn-block" onclick="doLogin()">تسجيل الدخول</button>
+      <button class="btn btn-outline btn-block" style="margin-top:10px;" onclick="openCreateAccountModal()">إنشاء حساب</button>
+      <div class="error-msg" id="loginError">بيانات الدخول غير صحيحة، حاول مرة أخرى.</div>
+      <div class="hint-box" id="demoHint">
+        <b>حدد الدور ثم اضغط دخول</b><br>
+        الإدارة → حساب المدير<br>
+        المعلم → حساب المعلم<br>
+        الطالب → حساب الطالب
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============= APP SHELL ============= -->
+<div id="app">
+  <div class="shell">
+    <div class="sidebar">
+      <div class="brand">
+        <svg class="mini-seal" viewBox="0 0 150 150">
+          <circle class="seal-ring" cx="75" cy="75" r="68"/>
+          <circle class="seal-ring2" cx="75" cy="75" r="55"/>
+          <text x="75" y="90" text-anchor="middle" font-family="Amiri, serif" font-size="34" fill="#e3c576">ث</text>
+        </svg>
+        <strong>مدرسة الأميرية<br>الثانوية بنين</strong>
+        <span id="roleLabelSidebar">لوحة الإدارة</span>
+      </div>
+      <div id="navContainer"></div>
+      <div class="sidebar-footer">
+        <div class="user-chip">
+          <div class="avatar-badge" id="avatarInit">أ</div>
+          <div>
+            <div id="sideUserName" style="color:var(--text-main);font-weight:700;">--</div>
+            <div id="sideUserRole" style="font-size:11px;">--</div>
+          </div>
+        </div>
+        <button class="btn btn-outline btn-block btn-sm" onclick="logout()">تسجيل الخروج</button>
+        <button class="btn btn-danger btn-block btn-sm" onclick="clearAllSavedData()" style="margin-top:10px;">مسح كل البيانات</button>
+      </div>
+    </div>
+    <div class="main" id="mainContent"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box" id="modalBox"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   AMIRIYA SECONDARY SCHOOL — SINGLE FILE PLATFORM
+   Data layer: localStorage-backed store (namespaced)
+   Roles: admin / teacher / student
+   ===================================================================== */
+
+const STORE_KEY = "amiriya_school_db_v1";
+const SITE_PASSWORD = "amiriya123";
+
+function defaultDB(){
+  return {
+    users:[],
+    classes:[
+      {id:"c1", name:"1 ثانوي /  بكالوريا"},
+      {id:"c2", name:"2 ثانوي / بكالوريا"},
+      {id:"c3", name:"3 ثانوي / بكالوريا"}
+      
+    ],
+    subjects:[
+      {id:"sub1", name:"اللغة العربية"},
+      {id:"sub2", name:"الرياضيات"},
+      {id:"sub3", name:"اللغة الإنجليزية"},
+      {id:"sub4", name:"العلوم"},
+      {id:"sub5", name:"التاريخ"}
+    ],
+    teachers:[],
+    students:[],
+    periods:[
+      {id:"p1", name:"تقييم الشهر الأول", max:20},
+      {id:"p2", name:"تقييم الشهر الثاني", max:20},
+      {id:"p3", name:"امتحان منتصف الفصل", max:40},
+      {id:"p4", name:"امتحان نهاية الفصل", max:100}
+    ],
+    grades:[],
+    attendance:[]
+  };
+}
+
+let DB = null;
+let session = null; // {userId, role}
+let currentView = null;
+
+function loadDB(){
+  const raw = localStorage.getItem(STORE_KEY);
+  if(raw){
+    DB = JSON.parse(raw);
+  } else {
+    DB = defaultDB();
+    saveDB();
+  }
+
+  const demoUsernames = ['admin','teacher1','teacher2','student1','student2'];
+  const demoIds = ['u1','u2','u3','u4','u5'];
+  DB.users = (DB.users || []).filter(u => !demoUsernames.includes(u.username) && !demoIds.includes(u.id));
+  DB.teachers = (DB.teachers || []).filter(t => !['t1','t2'].includes(t.id));
+  DB.students = (DB.students || []).filter(s => !['s1','s2','s3','s4','s5','s6'].includes(s.id));
+  DB.grades = (DB.grades || []).filter(g => !['g1','g2','g3','g4'].includes(g.id));
+  DB.attendance = (DB.attendance || []).filter(a => !['a1','a2','a3'].includes(a.id));
+  saveDB();
+}
+function saveDB(){ localStorage.setItem(STORE_KEY, JSON.stringify(DB)); }
+function clearAllSavedData(){
+  const confirmed = confirm('هل تريد فعلاً مسح جميع البيانات المحفوظة؟ سيتم حذف الجلسة الحالية وإعادة تعيين قاعدة البيانات إلى الحالة الافتراضية.');
+  if(!confirmed) return;
+
+  localStorage.removeItem(STORE_KEY);
+  localStorage.removeItem('amiriya_session');
+
+  const reserved = ['amiriya_school_db_v1', 'amiriya_session'];
+  Object.keys(localStorage).forEach(key => {
+    if(!reserved.includes(key) && key.startsWith('amiriya_')) {
+      localStorage.removeItem(key);
+    }
+  });
+
+  DB = defaultDB();
+  saveDB();
+  session = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+  document.getElementById('loginError').style.display = 'none';
+  toast('تم مسح جميع البيانات المحفوظة');
+}
+function uid(prefix){ return prefix + "_" + Math.random().toString(36).slice(2,9); }
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>{ t.style.display='none'; }, 2600);
+}
+
+function showSiteLock(){
+  document.getElementById('siteLock').style.display = 'flex';
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('sitePasswordInput').value = '';
+  document.getElementById('siteLockError').style.display = 'none';
+}
+
+function unlockSite(){
+  const value = document.getElementById('sitePasswordInput').value.trim();
+  const err = document.getElementById('siteLockError');
+  if(value === SITE_PASSWORD){
+    document.getElementById('siteLock').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    err.style.display = 'none';
+    return;
+  }
+  err.style.display = 'block';
+}
+
+document.getElementById('sitePasswordInput').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter') unlockSite();
+});
+
+/* ---------------- AUTH ---------------- */
+let selectedRole = "admin";
+document.getElementById('roleTabs').addEventListener('click', (e)=>{
+  const el = e.target.closest('.role-tab');
+  if(!el) return;
+  document.querySelectorAll('.role-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  selectedRole = el.dataset.role;
+  const hints = {
+    admin:"لا توجد حسابات مسجلة حالياً. أضف حساب الإدارة من لوحة الإدارة أو من قاعدة البيانات.",
+    teacher:"لا توجد حسابات معلم مسجلة حالياً.",
+    student:"لا توجد حسابات طالب مسجلة حالياً."
+  };
+  document.getElementById('demoHint').innerHTML = "<b>الحالة:</b><br>" + hints[selectedRole];
+});
+
+function doLogin(){
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value.trim();
+  const errEl = document.getElementById('loginError');
+
+  if(!DB.users || DB.users.length === 0){
+    errEl.textContent = 'لا توجد حسابات مسجلة حاليًا.';
+    errEl.style.display='block';
+    return;
+  }
+
+  const found = DB.users.find(x=>x.username===u && x.role===selectedRole);
+  if(!found){
+    errEl.textContent = 'بيانات الدخول غير صحيحة، حاول مرة أخرى.';
+    errEl.style.display='block';
+    return;
+  }
+  errEl.style.display='none';
+  session = {userId:found.id, role:found.role};
+  localStorage.setItem("amiriya_session", JSON.stringify(session));
+  enterApp();
+}
+
+function openCreateAccountModal(){
+  const roleOptions = ['admin','teacher','student'].map(role => `<option value="${role}">${role==='admin'?'الإدارة':role==='teacher'?'المعلم':'الطالب'}</option>`).join('');
+  openModal(`
+    <span class="close-x" onclick="closeModal()">×</span>
+    <h3>إنشاء حساب جديد</h3>
+    <label>الدور</label>
+    <select id="newAccountRole" onchange="renderCreateAccountExtraFields()">${roleOptions}</select>
+    <label>اسم المستخدم</label>
+    <input type="text" id="newAccountUser">
+    <label>كلمة المرور</label>
+    <input type="password" id="newAccountPass">
+    <label>اسم كامل</label>
+    <input type="text" id="newAccountName">
+    <div id="newAccountExtra"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">إلغاء</button>
+      <button class="btn btn-gold btn-sm" onclick="saveNewAccount()">إنشاء الحساب</button>
+    </div>
+  `);
+  renderCreateAccountExtraFields();
+}
+
+function renderCreateAccountExtraFields(){
+  const role = document.getElementById('newAccountRole').value;
+  const container = document.getElementById('newAccountExtra');
+  if(!container) return;
+
+  if(role === 'teacher'){
+    const subjectOptions = (DB.subjects || []).map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+    container.innerHTML = `
+      <label>المادة</label>
+      <select id="newTeacherSubject">${subjectOptions || '<option value="">لا توجد مواد</option>'}</select>
+      <label>اسم الفصل</label>
+      <input type="text" id="newTeacherClassName" placeholder="مثال: 1 ثانوي / بكالوريا">
+    `;
+    return;
+  }
+
+  if(role === 'student'){
+    const classOptions = (DB.classes || []).map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+    const selectedClassId = document.getElementById('newStudentClass')?.value || (DB.classes[0]?.id || '');
+    const selectedClass = (DB.classes || []).find(c => c.id === selectedClassId);
+    const isBacc = selectedClass && /بكالوريا|ثانوي/i.test(selectedClass.name);
+
+    container.innerHTML = `
+      <label>الفصل</label>
+      <select id="newStudentClass" onchange="renderCreateAccountExtraFields()">${classOptions || '<option value="">لا توجد فصول</option>'}</select>
+      ${isBacc ? `
+        <label>المسار</label>
+        <select id="newStudentPath" onchange="renderStudentSpecializationOptions()">
+          <option value="">اختر المسار</option>
+          <option value="هندسة وعلوم الحاسب">هندسة وعلوم الحاسب</option>
+          <option value="طب وعلوم الحياة">طب وعلوم الحياة</option>
+          <option value="أداب وفنون">أداب وفنون</option>
+          <option value="إدارة أعمال">إدارة أعمال</option>
+        </select>
+        <div id="studentSpecializationWrap"></div>
+      ` : ''}
+      <label>الرقم القومي</label>
+      <input type="text" id="newStudentNid" placeholder="اختياري">
+    `;
+
+    if(isBacc && document.getElementById('newStudentPath')) {
+      renderStudentSpecializationOptions();
+    }
+    return;
+  }
+
+  container.innerHTML = '';
+}
+
+function renderStudentSpecializationOptions(){
+  const path = document.getElementById('newStudentPath')?.value;
+  const wrap = document.getElementById('studentSpecializationWrap');
+  if(!wrap) return;
+
+  const optionsMap = {
+    'هندسة وعلوم الحاسب': ['كيمياء', 'برمجة'],
+    'طب وعلوم الحياة': ['فيزياء', 'رياضة'],
+    'أداب وفنون': ['أدب', 'فنون'],
+    'إدارة أعمال': ['محاسبة', 'إدارة']
+  };
+
+  const items = optionsMap[path] || [];
+  wrap.innerHTML = `
+    <label>مادة التخصص</label>
+    <select id="newStudentSpecialization">
+      <option value="">اختر مادة التخصص</option>
+      ${items.map(item => `<option value="${item}">${item}</option>`).join('')}
+    </select>
+  `;
+}
+
+function saveNewAccount(){
+  const username = document.getElementById('newAccountUser').value.trim();
+  const password = document.getElementById('newAccountPass').value.trim();
+  const name = document.getElementById('newAccountName').value.trim();
+  const role = document.getElementById('newAccountRole').value;
+
+  if(!username || !password || !name){
+    toast('يرجى تعبئة اسم المستخدم وكلمة المرور والاسم الكامل');
+    return;
+  }
+
+  if((DB.users || []).some(u => u.username === username)){
+    toast('اسم المستخدم موجود بالفعل');
+    return;
+  }
+
+  const user = {
+    id: uid('u'),
+    username,
+    role,
+    name,
+    password
+  };
+
+  if(role === 'teacher'){
+    const subjectId = document.getElementById('newTeacherSubject')?.value || '';
+    const className = document.getElementById('newTeacherClassName')?.value.trim() || '';
+    const cls = className ? ({id: uid('c'), name: className}) : null;
+    if(cls){
+      if(!DB.classes) DB.classes = [];
+      DB.classes.push(cls);
+    }
+
+    const teacherRec = {
+      id: uid('t'),
+      name,
+      subjectId,
+      classIds: cls ? [cls.id] : []
+    };
+    if(!DB.teachers) DB.teachers = [];
+    DB.teachers.push(teacherRec);
+    user.teacherId = teacherRec.id;
+  }
+
+  if(role === 'student'){
+    const classId = document.getElementById('newStudentClass')?.value || '';
+    const nationalId = document.getElementById('newStudentNid')?.value.trim() || '';
+    const className = (DB.classes || []).find(c => c.id === classId)?.name || '';
+    const path = document.getElementById('newStudentPath')?.value || '';
+    const specialization = document.getElementById('newStudentSpecialization')?.value || '';
+    const studentRec = {
+      id: uid('s'),
+      name,
+      classId,
+      national_id: nationalId,
+      path: /بكالوريا|ثانوي/i.test(className) ? path : '',
+      specialization: /بكالوريا|ثانوي/i.test(className) ? specialization : ''
+    };
+    if(!DB.students) DB.students = [];
+    DB.students.push(studentRec);
+    user.studentId = studentRec.id;
+  }
+
+  if(!DB.users) DB.users = [];
+  DB.users.push(user);
+  saveDB();
+  closeModal();
+  toast('تم إنشاء الحساب بنجاح');
+  document.getElementById('loginUser').value = username;
+  document.getElementById('loginPass').value = password;
+  selectedRole = role;
+  document.querySelectorAll('.role-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.role === role);
+  });
+}
+function logout(){
+  session = null;
+  localStorage.removeItem("amiriya_session");
+  document.getElementById('app').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('loginUser').value='';
+  document.getElementById('loginPass').value='';
+}
+
+function currentUser(){
+  if(!session || !DB.users) return null;
+  return DB.users.find(u=>u.id===session.userId) || null;
+}
+
+/* ---------------- APP ENTRY ---------------- */
+function enterApp(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('app').style.display='block';
+  const user = currentUser();
+  document.getElementById('sideUserName').textContent = user.name;
+  const roleNames = {admin:"مدير النظام", teacher:"معلم", student:"طالب"};
+  document.getElementById('sideUserRole').textContent = roleNames[user.role];
+  document.getElementById('avatarInit').textContent = user.name.trim().charAt(0);
+  document.getElementById('roleLabelSidebar').textContent =
+    user.role==='admin' ? 'لوحة الإدارة' : user.role==='teacher' ? 'لوحة المعلم' : 'لوحة الطالب';
+  buildNav();
+  navigateTo(user.role==='admin' ? 'dashboard' : user.role==='teacher' ? 't_dashboard' : 's_dashboard');
+}
+
+const NAV_ADMIN = [
+  {id:'dashboard', icon:'⌂', label:'الرئيسية'},
+  {id:'students', icon:'☰', label:'الطلاب'},
+  {id:'admin_affairs', icon:'⚙', label:'شئون الطلبة'},
+  {id:'teachers', icon:'✎', label:'المعلمون'},
+  {id:'classes', icon:'▦', label:'الفصول'},
+  {id:'grades', icon:'★', label:'الدرجات'},
+  {id:'attendance', icon:'✓', label:'الحضور والغياب'},
+  {id:'periods', icon:'⏱', label:'فترات التقييم'},
+  {id:'reports', icon:'⇩', label:'التقارير والتصدير'},
+];
+const NAV_TEACHER = [
+  {id:'t_dashboard', icon:'⌂', label:'الرئيسية'},
+  {id:'t_attendance', icon:'✓', label:'تسجيل الحضور'},
+  {id:'t_grades', icon:'★', label:'رصد الدرجات'},
+  {id:'t_export', icon:'⇩', label:'تصدير كشوف'},
+];
+const NAV_STUDENT = [
+  {id:'s_dashboard', icon:'⌂', label:'الرئيسية'},
+  {id:'s_grades', icon:'★', label:'درجاتي'},
+  {id:'s_attendance', icon:'✓', label:'سجل حضوري'},
+];
+
+function buildNav(){
+  const user = currentUser();
+  const nav = user.role==='admin' ? NAV_ADMIN : user.role==='teacher' ? NAV_TEACHER : NAV_STUDENT;
+  const cont = document.getElementById('navContainer');
+  cont.innerHTML = nav.map(n=>`<div class="nav-item" data-view="${n.id}"><span class="nav-icon">${n.icon}</span><span>${n.label}</span></div>`).join('');
+  cont.querySelectorAll('.nav-item').forEach(el=>{
+    el.addEventListener('click', ()=>navigateTo(el.dataset.view));
+  });
+}
+
+function navigateTo(view){
+  currentView = view;
+  document.querySelectorAll('.nav-item').forEach(el=>{
+    el.classList.toggle('active', el.dataset.view===view);
+  });
+  const renderers = {
+    dashboard: renderAdminDashboard,
+    students: renderStudents,
+    admin_affairs: renderAdminAffairs,
+    teachers: renderTeachers,
+    classes: renderClasses,
+    grades: renderGradesAdmin,
+    attendance: renderAttendanceAdmin,
+    periods: renderPeriods,
+    reports: renderReports,
+    t_dashboard: renderTeacherDashboard,
+    t_attendance: renderTeacherAttendance,
+    t_grades: renderTeacherGrades,
+    t_export: renderTeacherExport,
+    s_dashboard: renderStudentDashboard,
+    s_grades: renderStudentGrades,
+    s_attendance: renderStudentAttendance,
+  };
+  (renderers[view] || renderAdminDashboard)();
+}
+
+function setMain(html){ document.getElementById('mainContent').innerHTML = html; }
+
+function topbar(title, path){
+  return `<div class="topbar"><div><h2>${title}</h2><div class="path">${path}</div></div>
+    <div class="pill">📅 ${new Date().toLocaleDateString('ar-EG',{weekday:'long', year:'numeric', month:'long', day:'numeric'})}</div></div>`;
+}
+
+/* ================= MODAL HELPERS ================= */
+function openModal(html){
+  document.getElementById('modalBox').innerHTML = html;
+  document.getElementById('modalOverlay').style.display='flex';
+}
+function closeModal(){ document.getElementById('modalOverlay').style.display='none'; }
+document.getElementById('modalOverlay').addEventListener('click', (e)=>{
+  if(e.target.id==='modalOverlay') closeModal();
+});
+
+/* ================= ADMIN: DASHBOARD ================= */
+function renderAdminDashboard(){
+  const totalStudents = DB.students.length;
+  const totalTeachers = DB.teachers.length;
+  const totalClasses = DB.classes.length;
+  const today = new Date().toISOString().slice(0,10);
+  const todayAbsent = DB.attendance.filter(a=>a.date===today && a.status==='absent').length;
+
+  const recentGrades = [...DB.grades].slice(-5).reverse().map(g=>{
+    const st = DB.students.find(s=>s.id===g.studentId);
+    const sub = DB.subjects.find(s=>s.id===g.subjectId);
+    const per = DB.periods.find(p=>p.id===g.periodId);
+    return `<tr><td>${st?st.name:'-'}</td><td>${sub?sub.name:'-'}</td><td>${per?per.name:'-'}</td>
+      <td><span class="badge badge-gold">${g.score} / ${per?per.max:'-'}</span></td></tr>`;
+  }).join('') || `<tr><td colspan="4" class="empty-state">لا توجد درجات مسجلة بعد</td></tr>`;
+
+  setMain(`
+    ${topbar('نظرة عامة','الرئيسية / لوحة الإدارة')}
+    <div class="grid-cards">
+      <div class="stat-card"><div class="num">${totalStudents}</div><div class="lbl">إجمالي الطلاب</div></div>
+      <div class="stat-card"><div class="num">${totalTeachers}</div><div class="lbl">إجمالي المعلمين</div></div>
+      <div class="stat-card"><div class="num">${totalClasses}</div><div class="lbl">عدد الفصول</div></div>
+      <div class="stat-card"><div class="num">${todayAbsent}</div><div class="lbl">غياب اليوم</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h3>آخر الدرجات المسجلة</h3></div>
+      <table><thead><tr><th>الطالب</th><th>المادة</th><th>فترة التقييم</th><th>الدرجة</th></tr></thead>
+      <tbody>${recentGrades}</tbody></table>
+    </div>
+  `);
+}
+
+function renderAdminAffairs(){
+  const totalStudents = DB.students.length;
+  const totalTeachers = DB.teachers.length;
+  const totalClasses = DB.classes.length;
+
+  const byClassHtml = DB.classes.map(c=>{
+    const studs = DB.students.filter(s=>s.classId===c.id).map(s=>{
+      return `<li style="padding:6px 0;display:flex;justify-content:space-between;align-items:center;">
+        <span>${s.name} <small style="color:var(--text-muted);">${s.national_id||''}</small></span>
+        <span>
+          <button class="btn btn-outline btn-sm" onclick="editStudent('${s.id}')">عرض / تعديل</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteStudent('${s.id}')">حذف</button>
+        </span>
+      </li>`;
+    }).join('') || '<li class="small-muted">لا يوجد طلاب في هذا الفصل</li>';
+    return `<div class="panel"><div class="panel-head"><h3>${c.name} (${DB.students.filter(s=>s.classId===c.id).length})</h3></div><ul style="list-style:none;padding:10px;margin:0;">${studs}</ul></div>`;
+  }).join('');
+
+  setMain(`
+    ${topbar('شئون الطلبة','لوحة الإدارة / شئون الطلبة')}
+    <div class="panel">
+      <div class="panel-head"><h3>الإجراءات السريعة</h3>
+        <div class="toolbar">
+          <button class="btn btn-outline btn-sm" onclick="exportStudentsExcel()">تصدير قائمة الطلاب</button>
+          <button class="btn btn-gold btn-sm" onclick="openStudentModal()">+ إضافة طالب</button>
+        </div>
+      </div>
+      <div class="hint-box">استخدم الأزرار على كل صف لعرض أو تعديل بيانات الطالب.</div>
+    </div>
+    ${byClassHtml}
+  `);
+}
+
+/* ================= ADMIN: STUDENTS ================= */
+function renderStudents(){
+  const rows = DB.students.map(s=>{
+    const cls = DB.classes.find(c=>c.id===s.classId);
+    return `<tr>
+      <td>${s.name}</td><td>${cls?cls.name:'-'}</td><td>${s.national_id||'-'}</td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="editStudent('${s.id}')">تعديل</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteStudent('${s.id}')">حذف</button>
+      </td></tr>`;
+  }).join('') || `<tr><td colspan="4" class="empty-state"><div class="big">👥</div>لا يوجد طلاب مسجلون</td></tr>`;
+
+  setMain(`
+    ${topbar('إدارة الطلاب','الطلاب')}
+    <div class="panel">
+      <div class="panel-head">
+        <h3>قائمة الطلاب (${DB.students.length})</h3>
+        <div class="toolbar">
+          <button class="btn btn-outline btn-sm" onclick="importStudentsExcel()">استيراد من إكسل</button>
+          <button class="btn btn-outline btn-sm" onclick="exportStudentsExcel()">تصدير إكسل</button>
+          <button class="btn btn-gold btn-sm" onclick="openStudentModal()">+ إضافة طالب</button>
+        </div>
+      </div>
+      <table><thead><tr><th>الاسم</th><th>الفصل</th><th>الرقم القومي</th><th>إجراءات</th></tr></thead>
+      <tbody>${rows}</tbody></table>
+    </div>
+  `);
+}
+
+function openStudentModal(existing){
+  const classOptions = DB.classes.map(c=>`<option value="${c.id}" ${existing&&existing.classId===c.id?'selected':''}>${c.name}</option>`).join('');
+  openModal(`
+    <span class="close-x" onclick="closeModal()">×</span>
+    <h3>${existing?'تعديل بيانات طالب':'إضافة طالب جديد'}</h3>
+    <label>اسم الطالب</label><input type="text" id="stName" value="${existing?existing.name:''}">
+    <label>الفصل</label><select id="stClass">${classOptions}</select>
+    <label>الرقم القومي</label><input type="text" id="stNid" value="${existing?existing.national_id||'':''}">
+    <div class="modal-actions">
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">إلغاء</button>
+      <button class="btn btn-gold btn-sm" onclick="saveStudent('${existing?existing.id:''}')">حفظ</button>
+    </div>
+  `);
+}
+function editStudent(id){ openStudentModal(DB.students.find(s=>s.id===id)); }
+function saveStudent(existingId){
+  const name = document.getElementById('stName').value.trim();
+  const classId = document.getElementById('stClass').value;
+  const nid = document.getElementById('stNid').value.trim();
+  if(!name){ toast('يرجى إدخال اسم الطالب'); return; }
+  if(existingId){
+    const st = DB.students.find(s=>s.id===existingId);
+    st.name=name; st.classId=classId; st.national_id=nid;
+  } else {
+    DB.students.push({id:uid('s'), name, classId, national_id:nid});
+  }
+  saveDB(); closeModal(); toast('تم حفظ بيانات الطالب'); renderStudents();
+}
+function deleteStudent(id){
+  if(!confirm('تأكيد حذف هذا الطالب؟ سيتم حذف درجاته وسجل حضوره أيضاً.')) return;
+  DB.students = DB.students.filter(s=>s.id!==id);
+  DB.grades = DB.grades.filter(g=>g.studentId!==id);
+  DB.attendance = DB.attendance.filter(a=>a.studentId!==id);
+  saveDB(); toast('تم حذف الطالب'); renderStudents();
+}
+
+function exportStudentsExcel(){
+  const data = DB.students.map(s=>({
+    "اسم الطالب": s.name,
+    "الفصل": DB.classes.find(c=>c.id===s.classId)?.name || '-',
+    "الرقم القومي": s.national_id || ''
+  }));
+  const ws = XLSX.utils.json_to_sheet(data);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "الطلاب");
+  XLSX.writeFile(wb, "طلاب_الأميرية.xlsx");
+}
+function importStudentsExcel(){
+  const inp = document.createElement('input');
+  inp.type='file'; inp.accept='.xlsx,.xls,.csv';
+  inp.onchange = (e)=>{
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      const wb = XLSX.read(ev.target.result, {type:'binary'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws);
+      let added=0;
+      rows.forEach(r=>{
+        const name = r['اسم الطالب'] || r['name'] || r['الاسم'];
+        if(!name) return;
+        const clsName = r['الفصل'] || r['class'];
+        let cls = DB.classes.find(c=>c.name===clsName);
+        const classId = cls ? cls.id : DB.classes[0]?.id;
+        DB.students.push({id:uid('s'), name, classId, national_id: r['الرقم القومي']||r['national_id']||''});
+        added++;
+      });
+      saveDB(); toast(`تم استيراد ${added} طالب/طالبة`); renderStudents();
+    };
+    reader.readAsBinaryString(file);
+  };
+  inp.click();
+}
+
+/* ================= ADMIN: TEACHERS ================= */
+function renderTeachers(){
+  const rows = DB.teachers.map(t=>{
+    const sub = DB.subjects.find(s=>s.id===t.subjectId);
+    const classNames = t.classIds.map(cid=>DB.classes.find(c=>c.id===cid)?.name).filter(Boolean).join('، ');
+    return `<tr>
+      <td>${t.name}</td><td>${sub?sub.name:'-'}</td><td>${classNames||'-'}</td>
+      <td><button class="btn btn-outline btn-sm" onclick="editTeacher('${t.id}')">تعديل</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteTeacher('${t.id}')">حذف</button></td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="4" class="empty-state"><div class="big">🧑‍🏫</div>لا يوجد معلمون مسجلون</td></tr>`;
+
+  setMain(`
+    ${topbar('إدارة المعلمين','المعلمون')}
+    <div class="panel">
+      <div class="panel-head">
+        <h3>قائمة المعلمين (${DB.teachers.length})</h3>
+        <button class="btn btn-gold btn-sm" onclick="openTeacherModal()">+ إضافة معلم</button>
+      </div>
+      <table><thead><tr><th>الاسم</th><th>المادة</th><th>الفصول</th><th>إجراءات</th></tr></thead>
+      <tbody>${rows}</tbody></table>
+    </div>
+  `);
+}
+function openTeacherModal(existing){
+  const subOptions = DB.subjects.map(s=>`<option value="${s.id}" ${existing&&existing.subjectId===s.id?'selected':''}>${s.name}</option>`).join('');
+  const classChecks = DB.classes.map(c=>{
+    const checked = existing && existing.classIds.includes(c.id) ? 'checked':'';
+    return `<label style="display:flex;gap:6px;align-items:center;font-size:13px;color:var(--text-main);margin:6px 0;">
+      <input type="checkbox" class="teachClassChk" value="${c.id}" ${checked}> ${c.name}</label>`;
+  }).join('');
+  openModal(`
+    <span class="close-x" onclick="closeModal()">×</span>
+    <h3>${existing?'تعديل بيانات معلم':'إضافة معلم جديد'}</h3>
+    <label>اسم المعلم</label><input type="text" id="tName" value="${existing?existing.name:''}">
+    <label>المادة</label><select id="tSubject">${subOptions}</select>
+    <label>الفصول التي يقوم بتدريسها</label>
+    <div>${classChecks}</div>
+    <div class="modal-actions">
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">إلغاء</button>
+      <button class="btn btn-gold btn-sm" onclick="saveTeacher('${existing?existing.id:''}')">حفظ</button>
+    </div>
+  `);
+}
+function editTeacher(id){ openTeacherModal(DB.teachers.find(t=>t.id===id)); }
+function saveTeacher(existingId){
+  const name = document.getElementById('tName').value.trim();
+  const subjectId = document.getElementById('tSubject').value;
+  const classIds = [...document.querySelectorAll('.teachClassChk:checked')].map(c=>c.value);
+  if(!name){ toast('يرجى إدخال اسم المعلم'); return; }
+  if(existingId){
+    const t = DB.teachers.find(x=>x.id===existingId);
+    t.name=name; t.subjectId=subjectId; t.classIds=classIds;
+  } else {
+    DB.teachers.push({id:uid('t'), name, subjectId, classIds});
+  }
+  saveDB(); closeModal(); toast('تم حفظ بيانات المعلم'); renderTeachers();
+}
+function deleteTeacher(id){
+  if(!confirm('تأكيد حذف هذا المعلم؟')) return;
+  DB.teachers = DB.teachers.filter(t=>t.id!==id);
+  saveDB(); toast('تم حذف المعلم'); renderTeachers();
+}
+
+/* ================= ADMIN: CLASSES ================= */
+function renderClasses(){
+  const rows = DB.classes.map(c=>{
+    const count = DB.students.filter(s=>s.classId===c.id).length;
+    return `<tr><td>${c.name}</td><td>${count} طالب</td>
+      <td><button class="btn btn-outline btn-sm" onclick="renameClass('${c.id}')">تعديل الاسم</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteClass('${c.id}')">حذف</button></td></tr>`;
+  }).join('') || `<tr><td colspan="3" class="empty-state">لا توجد فصول</td></tr>`;
+  setMain(`
+    ${topbar('إدارة الفصول','الفصول')}
+    <div class="panel">
+      <div class="panel-head"><h3>الفصول الدراسية (${DB.classes.length})</h3>
+        <button class="btn btn-gold btn-sm" onclick="addClass()">+ إضافة فصل</button></div>
+      <table><thead><tr><th>اسم الفصل</th><th>عدد الطلاب</th><th>إجراءات</th></tr></thead>
+      <tbody>${rows}</tbody></table>
+    </div>
+  `);
+}
+function addClass(){
+  const name = prompt('اسم الفصل الجديد (مثال: 1 ثانوي / 2)');
+  if(!name) return;
+  DB.classes.push({id:uid('c'), name});
+  saveDB(); toast('تم إضافة الفصل'); renderClasses();
+}
+function renameClass(id){
+  const cls = DB.classes.find(c=>c.id===id);
+  const name = prompt('اسم الفصل', cls.name);
+  if(!name) return;
+  cls.name=name; saveDB(); renderClasses();
+}
+function deleteClass(id){
+  if(!confirm('حذف الفصل؟ يجب نقل الطلاب أولاً')) return;
+  const hasStudents = DB.students.some(s=>s.classId===id);
+  if(hasStudents){ toast('لا يمكن حذف فصل يحتوي على طلاب'); return; }
+  DB.classes = DB.classes.filter(c=>c.id!==id);
+  saveDB(); renderClasses();
+}
+
+/* ================= ADMIN: EVALUATION PERIODS ================= */
+function renderPeriods(){
+  const rows = DB.periods.map(p=>`
+    <tr><td>${p.name}</td><td>${p.max} درجة</td>
+    <td><button class="btn btn-outline btn-sm" onclick="editPeriod('${p.id}')">تعديل</button>
+    <button class="btn btn-danger btn-sm" onclick="deletePeriod('${p.id}')">حذف</button></td></tr>
+  `).join('') || `<tr><td colspan="3" class="empty-state">لا توجد فترات تقييم</td></tr>`;
+  setMain(`
+    ${topbar('فترات التقييم','فترات التقييم')}
+    <div class="panel">
+      <div class="panel-head"><h3>فترات التقييم المعتمدة</h3>
+        <button class="btn btn-gold btn-sm" onclick="openPeriodModal()">+ إضافة فترة تقييم</button></div>
+      <table><thead><tr><th>اسم الفترة</th><th>الدرجة القصوى</th><th>إجراءات</th></tr></thead>
+      <tbody>${rows}</tbody></table>
+    </div>
+  `);
+}
+function openPeriodModal(existing){
+  openModal(`
+    <span class="close-x" onclick="closeModal()">×</span>
+    <h3>${existing?'تعديل فترة تقييم':'إضافة فترة تقييم'}</h3>
+    <label>اسم الفترة</label><input type="text" id="pName" value="${existing?existing.name:''}">
+    <label>الدرجة القصوى</label><input type="number" id="pMax" value="${existing?existing.max:20}">
+    <div class="modal-actions">
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">إلغاء</button>
+      <button class="btn btn-gold btn-sm" onclick="savePeriod('${existing?existing.id:''}')">حفظ</button>
+    </div>
+  `);
+}
+function editPeriod(id){ openPeriodModal(DB.periods.find(p=>p.id===id)); }
+function savePeriod(existingId){
+  const name = document.getElementById('pName').value.trim();
+  const max = Number(document.getElementById('pMax').value) || 20;
+  if(!name){ toast('يرجى إدخال اسم الفترة'); return; }
+  if(existingId){
+    const p = DB.periods.find(x=>x.id===existingId);
+    p.name=name; p.max=max;
+  } else {
+    DB.periods.push({id:uid('p'), name, max});
+  }
+  saveDB(); closeModal(); toast('تم حفظ فترة التقييم'); renderPeriods();
+}
+function deletePeriod(id){
+  if(!confirm('حذف فترة التقييم؟ سيتم حذف كل الدرجات المرتبطة بها')) return;
+  DB.periods = DB.periods.filter(p=>p.id!==id);
+  DB.grades = DB.grades.filter(g=>g.periodId!==id);
+  saveDB(); renderPeriods();
+}
+
+/* ================= ADMIN: GRADES OVERVIEW ================= */
+function renderGradesAdmin(){
+  const classOptions = DB.classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  const periodOptions = DB.periods.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+  setMain(`
+    ${topbar('إدارة الدرجات','الدرجات')}
+    <div class="panel">
+      <div class="panel-head">
+        <h3>عرض الدرجات حسب الفصل وفترة التقييم</h3>
+        <div class="toolbar">
+          <select class="select-inline" id="gcClass" onchange="loadGradesTable()">${classOptions}</select>
+          <select class="select-inline" id="gcPeriod" onchange="loadGradesTable()">${periodOptions}</select>
+          <button class="btn btn-outline btn-sm" onclick="exportGradesExcel()">تصدير إكسل</button>
+        </div>
+      </div>
+      <div id="gradesTableWrap"></div>
+    </div>
+  `);
+  loadGradesTable();
+}
+function loadGradesTable(){
+  const classId = document.getElementById('gcClass').value;
+  const periodId = document.getElementById('gcPeriod').value;
+  const students = DB.students.filter(s=>s.classId===classId);
+  const period = DB.periods.find(p=>p.id===periodId);
+  const rows = students.map(s=>{
+    const cells = DB.subjects.map(sub=>{
+      const g = DB.grades.find(gr=>gr.studentId===s.id && gr.subjectId===sub.id && gr.periodId===periodId);
+      return `<td>${g ? g.score+' / '+period.max : '<span class="small-muted">—</span>'}</td>`;
+    }).join('');
+    return `<tr><td>${s.name}</td>${cells}</tr>`;
+  }).join('') || `<tr><td colspan="${DB.subjects.length+1}" class="empty-state">لا يوجد طلاب في هذا الفصل</td></tr>`;
+  const headers = DB.subjects.map(s=>`<th>${s.name}</th>`).join('');
+  document.getElementById('gradesTableWrap').innerHTML = `
+    <table><thead><tr><th>الطالب</th>${headers}</tr></thead><tbody>${rows}</tbody></table>
+  `;
+}
+function exportGradesExcel(){
+  const classId = document.getElementById('gcClass').value;
+  const periodId = document.getElementById('gcPeriod').value;
+  const period = DB.periods.find(p=>p.id===periodId);
+  const cls = DB.classes.find(c=>c.id===classId);
+  const students = DB.students.filter(s=>s.classId===classId);
+  const data = students.map(s=>{
+    const row = {"اسم الطالب": s.name};
+    DB.subjects.forEach(sub=>{
+      const g = DB.grades.find(gr=>gr.studentId===s.id && gr.subjectId===sub.id && gr.periodId===periodId);
+      row[sub.name] = g ? g.score : '';
+    });
+    return row;
+  });
+  const ws = XLSX.utils.json_to_sheet(data);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "الدرجات");
+  XLSX.writeFile(wb, `درجات_${cls.name}_${period.name}.xlsx`.replace(/\s+/g,'_'));
+}
+
+/* ================= ADMIN: ATTENDANCE OVERVIEW ================= */
+function renderAttendanceAdmin(){
+  const classOptions = DB.classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  const today = new Date().toISOString().slice(0,10);
+  setMain(`
+    ${topbar('سجل الحضور والغياب','الحضور والغياب')}
+    <div class="panel">
+      <div class="panel-head">
+        <h3>عرض الحضور حسب الفصل والتاريخ</h3>
+        <div class="toolbar">
+          <select class="select-inline" id="atClass" onchange="loadAttendanceTable()">${classOptions}</select>
+          <input type="date" id="atDate" value="${today}" onchange="loadAttendanceTable()">
+        </div>
+      </div>
+      <div id="attendanceTableWrap"></div>
+    </div>
+  `);
+  loadAttendanceTable();
+}
+function loadAttendanceTable(){
+  const classId = document.getElementById('atClass').value;
+  const date = document.getElementById('atDate').value;
+  const students = DB.students.filter(s=>s.classId===classId);
+  const badgeMap = {present:'<span class="badge badge-green">حاضر</span>', absent:'<span class="badge badge-red">غائب</span>', late:'<span class="badge badge-gold">متأخر</span>'};
+  const rows = students.map(s=>{
+    const rec = DB.attendance.find(a=>a.studentId===s.id && a.date===date);
+    return `<tr><td>${s.name}</td><td>${rec ? badgeMap[rec.status] : '<span class="badge badge-muted">لم يسجل</span>'}</td></tr>`;
+  }).join('') || `<tr><td colspan="2" class="empty-state">لا يوجد طلاب</td></tr>`;
+  document.getElementById('attendanceTableWrap').innerHTML = `
+    <table><thead><tr><th>الطالب</th><th>الحالة</th></tr></thead><tbody>${rows}</tbody></table>
+  `;
+}
+
+/* ================= ADMIN: REPORTS ================= */
+function renderReports(){
+  setMain(`
+    ${topbar('التقارير والتصدير','التقارير')}
+    <div class="panel">
+      <div class="panel-head"><h3>تصدير شامل</h3></div>
+      <p class="small-muted">يمكنك تصدير بيانات كاملة عن المدرسة في ملف إكسل واحد (طلاب، معلمون، درجات، حضور).</p>
+      <button class="btn btn-gold btn-sm" onclick="exportFullReport()">تصدير التقرير الكامل (Excel)</button>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h3>ملخص عام</h3></div>
+      <div class="grid-cards" style="margin-bottom:0;">
+        <div class="stat-card"><div class="num">${DB.students.length}</div><div class="lbl">الطلاب</div></div>
+        <div class="stat-card"><div class="num">${DB.teachers.length}</div><div class="lbl">المعلمون</div></div>
+        <div class="stat-card"><div class="num">${DB.grades.length}</div><div class="lbl">سجلات الدرجات</div></div>
+        <div class="stat-card"><div class="num">${DB.attendance.length}</div><div class="lbl">سجلات الحضور</div></div>
+      </div>
+    </div>
+  `);
+}
+function exportFullReport(){
+  const wb = XLSX.utils.book_new();
+  const studentsData = DB.students.map(s=>({
+    "الاسم": s.name, "الفصل": DB.classes.find(c=>c.id===s.classId)?.name||'-', "الرقم القومي": s.national_id||''
+  }));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(studentsData), "الطلاب");
+
+  const teachersData = DB.teachers.map(t=>({
+    "الاسم": t.name, "المادة": DB.subjects.find(s=>s.id===t.subjectId)?.name||'-',
+    "الفصول": t.classIds.map(cid=>DB.classes.find(c=>c.id===cid)?.name).join('، ')
+  }));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(teachersData), "المعلمون");
+
+  const gradesData = DB.grades.map(g=>({
+    "الطالب": DB.students.find(s=>s.id===g.studentId)?.name||'-',
+    "المادة": DB.subjects.find(s=>s.id===g.subjectId)?.name||'-',
+    "فترة التقييم": DB.periods.find(p=>p.id===g.periodId)?.name||'-',
+    "الدرجة": g.score
+  }));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(gradesData), "الدرجات");
+
+  const attData = DB.attendance.map(a=>({
+    "الطالب": DB.students.find(s=>s.id===a.studentId)?.name||'-',
+    "التاريخ": a.date,
+    "الحالة": a.status==='present'?'حاضر':a.status==='absent'?'غائب':'متأخر'
+  }));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(attData), "الحضور");
+
+  XLSX.writeFile(wb, "تقرير_شامل_الأميرية.xlsx");
+}
+
+/* ================= TEACHER VIEWS ================= */
+function myTeacherRecord(){
+  const user = currentUser();
+  return DB.teachers.find(t=>t.id===user.teacherId);
+}
+function renderTeacherDashboard(){
+  const t = myTeacherRecord();
+  const sub = DB.subjects.find(s=>s.id===t.subjectId);
+  const classNames = t.classIds.map(cid=>DB.classes.find(c=>c.id===cid)?.name).join('، ');
+  const totalStudents = DB.students.filter(s=>t.classIds.includes(s.classId)).length;
+  setMain(`
+    ${topbar('لوحة المعلم','الرئيسية')}
+    <div class="grid-cards">
+      <div class="stat-card"><div class="num">${t.classIds.length}</div><div class="lbl">عدد الفصول</div></div>
+      <div class="stat-card"><div class="num">${totalStudents}</div><div class="lbl">إجمالي الطلاب</div></div>
+      <div class="stat-card"><div class="num">${sub?sub.name:'-'}</div><div class="lbl">المادة</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h3>الفصول التي تقوم بتدريسها</h3></div>
+      <p class="small-muted">${classNames||'لا توجد فصول محددة'}</p>
+    </div>
+  `);
+}
+function renderTeacherAttendance(){
+  const t = myTeacherRecord();
+  const classOptions = t.classIds.map(cid=>{
+    const c = DB.classes.find(x=>x.id===cid);
+    return `<option value="${c.id}">${c.name}</option>`;
+  }).join('');
+  const today = new Date().toISOString().slice(0,10);
+  setMain(`
+    ${topbar('تسجيل الحضور','الحضور والغياب')}
+    <div class="panel">
+      <div class="panel-head">
+        <h3>تسجيل حضور الطلاب</h3>
+        <div class="toolbar">
+          <select class="select-inline" id="teClass" onchange="loadTeacherAttendanceForm()">${classOptions}</select>
+          <input type="date" id="teDate" value="${today}" onchange="loadTeacherAttendanceForm()">
+        </div>
+      </div>
+      <div id="teAttendanceForm"></div>
+      <button class="btn btn-gold btn-sm" style="margin-top:14px;" onclick="saveTeacherAttendance()">حفظ الحضور</button>
+    </div>
+  `);
+  loadTeacherAttendanceForm();
+}
+function loadTeacherAttendanceForm(){
+  const classId = document.getElementById('teClass').value;
+  const date = document.getElementById('teDate').value;
+  const students = DB.students.filter(s=>s.classId===classId);
+  const rows = students.map(s=>{
+    const rec = DB.attendance.find(a=>a.studentId===s.id && a.date===date);
+    const status = rec ? rec.status : 'present';
+    return `<tr><td>${s.name}</td><td>
+      <select class="select-inline attStatusSelect" data-sid="${s.id}">
+        <option value="present" ${status==='present'?'selected':''}>حاضر</option>
+        <option value="absent" ${status==='absent'?'selected':''}>غائب</option>
+        <option value="late" ${status==='late'?'selected':''}>متأخر</option>
+      </select></td></tr>`;
+  }).join('') || `<tr><td colspan="2" class="empty-state">لا يوجد طلاب في هذا الفصل</td></tr>`;
+  document.getElementById('teAttendanceForm').innerHTML = `
+    <table><thead><tr><th>الطالب</th><th>الحالة</th></tr></thead><tbody>${rows}</tbody></table>
+  `;
+}
+function saveTeacherAttendance(){
+  const classId = document.getElementById('teClass').value;
+  const date = document.getElementById('teDate').value;
+  document.querySelectorAll('.attStatusSelect').forEach(sel=>{
+    const sid = sel.dataset.sid;
+    const status = sel.value;
+    let rec = DB.attendance.find(a=>a.studentId===sid && a.date===date);
+    if(rec){ rec.status = status; }
+    else { DB.attendance.push({id:uid('a'), studentId:sid, date, status, classId}); }
+  });
+  saveDB(); toast('تم حفظ سجل الحضور بنجاح');
+}
+function renderTeacherGrades(){
+  const t = myTeacherRecord();
+  const classOptions = t.classIds.map(cid=>{
+    const c = DB.classes.find(x=>x.id===cid);
+    return `<option value="${c.id}">${c.name}</option>`;
+  }).join('');
+  const periodOptions = DB.periods.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+  setMain(`
+    ${topbar('رصد الدرجات','الدرجات')}
+    <div class="panel">
+      <div class="panel-head">
+        <h3>رصد درجات ${DB.subjects.find(s=>s.id===t.subjectId)?.name}</h3>
+        <div class="toolbar">
+          <select class="select-inline" id="tgClass" onchange="loadTeacherGradesForm()">${classOptions}</select>
+          <select class="select-inline" id="tgPeriod" onchange="loadTeacherGradesForm()">${periodOptions}</select>
+        </div>
+      </div>
+      <div id="teacherGradesForm"></div>
+      <button class="btn btn-gold btn-sm" style="margin-top:14px;" onclick="saveTeacherGrades()">حفظ الدرجات</button>
+    </div>
+  `);
+  loadTeacherGradesForm();
+}
+function loadTeacherGradesForm(){
+  const t = myTeacherRecord();
+  const classId = document.getElementById('tgClass').value;
+  const periodId = document.getElementById('tgPeriod').value;
+  const period = DB.periods.find(p=>p.id===periodId);
+  const students = DB.students.filter(s=>s.classId===classId);
+  const rows = students.map(s=>{
+    const g = DB.grades.find(gr=>gr.studentId===s.id && gr.subjectId===t.subjectId && gr.periodId===periodId);
+    return `<tr><td>${s.name}</td><td>
+      <input type="number" min="0" max="${period.max}" class="gradeInput" data-sid="${s.id}" value="${g?g.score:''}" style="max-width:100px;">
+      <span class="small-muted"> / ${period.max}</span></td></tr>`;
+  }).join('') || `<tr><td colspan="2" class="empty-state">لا يوجد طلاب في هذا الفصل</td></tr>`;
+  document.getElementById('teacherGradesForm').innerHTML = `
+    <table><thead><tr><th>الطالب</th><th>الدرجة</th></tr></thead><tbody>${rows}</tbody></table>
+  `;
+}
+function saveTeacherGrades(){
+  const t = myTeacherRecord();
+  const periodId = document.getElementById('tgPeriod').value;
+  const period = DB.periods.find(p=>p.id===periodId);
+  document.querySelectorAll('.gradeInput').forEach(inp=>{
+    const sid = inp.dataset.sid;
+    const val = inp.value;
+    if(val==='') return;
+    let score = Math.max(0, Math.min(period.max, Number(val)));
+    let g = DB.grades.find(gr=>gr.studentId===sid && gr.subjectId===t.subjectId && gr.periodId===periodId);
+    if(g){ g.score = score; }
+    else { DB.grades.push({id:uid('g'), studentId:sid, subjectId:t.subjectId, periodId, score}); }
+  });
+  saveDB(); toast('تم حفظ الدرجات بنجاح');
+}
+function renderTeacherExport(){
+  const t = myTeacherRecord();
+  const classOptions = t.classIds.map(cid=>{
+    const c = DB.classes.find(x=>x.id===cid);
+    return `<option value="${c.id}">${c.name}</option>`;
+  }).join('');
+  const periodOptions = DB.periods.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+  setMain(`
+    ${topbar('تصدير كشوف الدرجات','تصدير')}
+    <div class="panel">
+      <div class="panel-head"><h3>تصدير كشف درجات فصل معين</h3></div>
+      <div class="form-row">
+        <div><label>الفصل</label><select id="teExpClass">${classOptions}</select></div>
+        <div><label>فترة التقييم</label><select id="teExpPeriod">${periodOptions}</select></div>
+      </div>
+      <button class="btn btn-gold btn-sm" style="margin-top:16px;" onclick="teacherExportExcel()">تصدير الآن (Excel)</button>
+    </div>
+  `);
+}
+function teacherExportExcel(){
+  const t = myTeacherRecord();
+  const classId = document.getElementById('teExpClass').value;
+  const periodId = document.getElementById('teExpPeriod').value;
+  const cls = DB.classes.find(c=>c.id===classId);
+  const period = DB.periods.find(p=>p.id===periodId);
+  const students = DB.students.filter(s=>s.classId===classId);
+  const data = students.map(s=>{
+    const g = DB.grades.find(gr=>gr.studentId===s.id && gr.subjectId===t.subjectId && gr.periodId===periodId);
+    return {"اسم الطالب": s.name, "الدرجة": g?g.score:'', "من": period.max};
+  });
+  const ws = XLSX.utils.json_to_sheet(data);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "كشف الدرجات");
+  XLSX.writeFile(wb, `كشف_${cls.name}_${period.name}.xlsx`.replace(/\s+/g,'_'));
+}
+
+/* ================= STUDENT VIEWS ================= */
+function myStudentRecord(){
+  const user = currentUser();
+  return DB.students.find(s=>s.id===user.studentId);
+}
+function renderStudentDashboard(){
+  const s = myStudentRecord();
+  const cls = DB.classes.find(c=>c.id===s.classId);
+  const myGrades = DB.grades.filter(g=>g.studentId===s.id);
+  const avgPct = myGrades.length ? Math.round(myGrades.reduce((acc,g)=>{
+    const per = DB.periods.find(p=>p.id===g.periodId);
+    return acc + (g.score/per.max*100);
+  },0)/myGrades.length) : 0;
+  const myAtt = DB.attendance.filter(a=>a.studentId===s.id);
+  const absentCount = myAtt.filter(a=>a.status==='absent').length;
+
+  setMain(`
+    ${topbar('لوحة الطالب', s.name+' - '+(cls?cls.name:''))}
+    <div class="grid-cards">
+      <div class="stat-card"><div class="num">${avgPct}%</div><div class="lbl">المعدل التقريبي</div></div>
+      <div class="stat-card"><div class="num">${myGrades.length}</div><div class="lbl">درجات مسجلة</div></div>
+      <div class="stat-card"><div class="num">${absentCount}</div><div class="lbl">أيام الغياب</div></div>
+      <div class="stat-card"><div class="num">${myAtt.length}</div><div class="lbl">سجلات الحضور</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h3>المعدل العام</h3></div>
+      <div class="progress-track"><div class="progress-fill" style="width:${avgPct}%;"></div></div>
+      <p class="small-muted" style="margin-top:8px;">${avgPct}% من إجمالي الدرجات المسجلة حتى الآن</p>
+    </div>
+  `);
+}
+function renderStudentGrades(){
+  const s = myStudentRecord();
+  const rows = DB.periods.map(p=>{
+    const cells = DB.subjects.map(sub=>{
+      const g = DB.grades.find(gr=>gr.studentId===s.id && gr.subjectId===sub.id && gr.periodId===p.id);
+      return `<td>${g ? g.score+' / '+p.max : '<span class="small-muted">—</span>'}</td>`;
+    }).join('');
+    return `<tr><td>${p.name}</td>${cells}</tr>`;
+  }).join('');
+  const headers = DB.subjects.map(sub=>`<th>${sub.name}</th>`).join('');
+  setMain(`
+    ${topbar('درجاتي','الدرجات')}
+    <div class="panel">
+      <div class="panel-head"><h3>كشف الدرجات - ${s.name}</h3></div>
+      <table><thead><tr><th>فترة التقييم</th>${headers}</tr></thead><tbody>${rows}</tbody></table>
+    </div>
+  `);
+}
+function renderStudentAttendance(){
+  const s = myStudentRecord();
+  const badgeMap = {present:'<span class="badge badge-green">حاضر</span>', absent:'<span class="badge badge-red">غائب</span>', late:'<span class="badge badge-gold">متأخر</span>'};
+  const records = DB.attendance.filter(a=>a.studentId===s.id).sort((a,b)=>b.date.localeCompare(a.date));
+  const rows = records.map(r=>`<tr><td>${r.date}</td><td>${badgeMap[r.status]}</td></tr>`).join('')
+    || `<tr><td colspan="2" class="empty-state">لا توجد سجلات حضور بعد</td></tr>`;
+  setMain(`
+    ${topbar('سجل حضوري','الحضور والغياب')}
+    <div class="panel">
+      <div class="panel-head"><h3>سجل الحضور - ${s.name}</h3></div>
+      <table><thead><tr><th>التاريخ</th><th>الحالة</th></tr></thead><tbody>${rows}</tbody></table>
+    </div>
+  `);
+}
+
+/* ================= INIT ================= */
+loadDB();
+showSiteLock();
+(function tryRestoreSession(){
+  const raw = localStorage.getItem("amiriya_session");
+  if(raw){
+    try{
+      session = JSON.parse(raw);
+      const user = DB.users.find(u=>u.id===session.userId);
+      if(user){ enterApp(); return; }
+    }catch(e){}
+  }
+})();
+</script>
+</body>
+</html>
